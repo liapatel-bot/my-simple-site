@@ -3,29 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Test</title>
+    <title>Email Debug - StyleCut Salon</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         body { font-family: Arial; background:#1a1a1a; color:#eee; padding:40px; text-align:center; }
-        button { background:#ffd700; color:#111; padding:15px 30px; font-size:1.2rem; border:none; border-radius:50px; }
-        #result { margin-top:20px; padding:20px; border-radius:10px; }
+        button { background:#ffd700; color:#111; padding:15px 30px; font-size:1.2rem; border:none; border-radius:50px; margin:10px; }
+        #result { margin:30px; padding:20px; border-radius:10px; font-size:1.1rem; }
     </style>
 </head>
 <body>
-    <h1>EmailJS Test</h1>
-    <button onclick="sendTest()">Send Test Email</button>
+    <h1>EmailJS Debug Test</h1>
+    
+    <input type="email" id="testEmail" placeholder="Enter your email here" style="padding:10px; width:300px; margin:10px;">
+    <br>
+    <button onclick="sendDebugEmail()">Send Test Email Now</button>
+
     <div id="result"></div>
 
     <script>
         emailjs.init("I5TSWQG0NMQGy0UdU");
 
-        function sendTest() {
+        function sendDebugEmail() {
+            const userEmail = document.getElementById('testEmail').value || "your_email@gmail.com";
             const result = document.getElementById('result');
-            result.innerHTML = "Sending...";
+            
+            result.style.background = "#333";
+            result.innerHTML = "⏳ Sending to: " + userEmail;
 
             emailjs.send("service_0o9dce2", "template_jm8o97r", {
                 name: "Test Customer",
-                email: "your_own_email@gmail.com",   // ← Change this to your real email first
+                email: userEmail,          // This must match the template
                 service: "Haircut + Style",
                 date: "2026-05-20",
                 time: "14:00",
@@ -33,7 +40,7 @@
             })
             .then(() => {
                 result.style.background = "#006600";
-                result.innerHTML = "✅ Status: Sent Successfully<br>Check your inbox + Spam";
+                result.innerHTML = `✅ Said it was sent to:<br><strong>${userEmail}</strong><br><br>Check inbox + <strong>Spam/Junk</strong> folder`;
             })
             .catch(err => {
                 result.style.background = "#660000";
