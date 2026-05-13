@@ -4,49 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Debug - StyleCut Salon</title>
+
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
     <style>
-        body { font-family: Arial; background:#1a1a1a; color:#eee; padding:40px; text-align:center; }
-        button { background:#ffd700; color:#111; padding:15px 30px; font-size:1.2rem; border:none; border-radius:50px; margin:10px; }
-        #result { margin:30px; padding:20px; border-radius:10px; font-size:1.1rem; }
+        body {
+            font-family: Arial;
+            background: #1a1a1a;
+            color: #eee;
+            padding: 40px;
+            text-align: center;
+        }
+
+        button {
+            background: #ffd700;
+            color: #111;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        input {
+            padding: 10px;
+            width: 300px;
+            margin: 10px;
+            border-radius: 8px;
+            border: none;
+        }
+
+        #result {
+            margin: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+        }
     </style>
 </head>
+
 <body>
+
     <h1>EmailJS Debug Test</h1>
-    
-    <input type="email" id="testEmail" placeholder="Enter your email here" style="padding:10px; width:300px; margin:10px;">
+
+    <input
+        type="email"
+        id="testEmail"
+        placeholder="Enter your email here"
+    >
+
     <br>
-    <button onclick="sendDebugEmail()">Send Test Email Now</button>
+
+    <button onclick="sendDebugEmail()">
+        Send Test Email Now
+    </button>
 
     <div id="result"></div>
 
     <script>
+        // Initialize EmailJS
         emailjs.init("I5TSWQG0NMQGy0UdU");
 
         function sendDebugEmail() {
-            const userEmail = document.getElementById('testEmail').value || "your_email@gmail.com";
-            const result = document.getElementById('result');
-            
+
+            const userEmail = document.getElementById("testEmail").value;
+            const result = document.getElementById("result");
+
             result.style.background = "#333";
             result.innerHTML = "⏳ Sending to: " + userEmail;
 
-            emailjs.send("service_0o9dce2", "template_jm8o97r", {
-                name: "Test Customer",
-                email: userEmail,          // This must match the template
-                service: "Haircut + Style",
-                date: "2026-05-20",
-                time: "14:00",
-                price: "35"
-            })
-            .then(() => {
+            // SEND EMAIL
+            emailjs.send(
+                "service_0o9dce2",
+                "template_0b4yceq", // NEW TEMPLATE ID
+                {
+                    to_email: userEmail,
+                    customer_name: "Test Customer",
+                    service_name: "Haircut + Style",
+                    appointment_date: "2026-05-20",
+                    appointment_time: "14:00",
+                    total_price: "$35"
+                }
+            )
+
+            .then(function(response) {
+
                 result.style.background = "#006600";
-                result.innerHTML = `✅ Said it was sent to:<br><strong>${userEmail}</strong><br><br>Check inbox + <strong>Spam/Junk</strong> folder`;
+
+                result.innerHTML = `
+                    ✅ Email successfully sent to:
+                    <br><br>
+                    <strong>${userEmail}</strong>
+                    <br><br>
+                    Check Inbox + Spam/Junk folder
+                `;
+
+                console.log("SUCCESS!", response.status, response.text);
+
             })
-            .catch(err => {
+
+            .catch(function(error) {
+
                 result.style.background = "#660000";
-                result.innerHTML = "❌ Error: " + (err.text || err);
+
+                result.innerHTML = `
+                    ❌ Error Sending Email
+                    <br><br>
+                    ${error.text || JSON.stringify(error)}
+                `;
+
+                console.error("FAILED...", error);
             });
         }
     </script>
+
 </body>
 </html>
