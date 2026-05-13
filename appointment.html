@@ -3,137 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Appointment - StyleCut Salon</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <title>Email Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
-        body { margin:0; font-family:'Arial',sans-serif; background:#1a1a1a; color:#eee; }
-        header, nav { background:linear-gradient(#2c2c2c,#111); padding:1.5rem 0; text-align:center; }
-        nav a { color:#ffd700; margin:0 15px; text-decoration:none; font-weight:bold; }
-        .booking-container { max-width:800px; margin:40px auto; background:#222; padding:40px; border-radius:12px; }
-        h2 { color:#ffd700; text-align:center; }
-        label { display:block; margin:15px 0 5px; font-weight:bold; }
-        select, input, textarea { width:100%; padding:12px; background:#333; border:1px solid #555; color:#eee; border-radius:6px; margin-bottom:15px; }
-        .time-slots { display:grid; grid-template-columns:repeat(auto-fit, minmax(100px,1fr)); gap:10px; }
-        .time-slot { padding:12px; background:#333; text-align:center; border-radius:6px; cursor:pointer; }
-        .time-slot.selected { background:#ffd700; color:#111; font-weight:bold; }
-        button { background:#ffd700; color:#111; padding:14px 32px; font-size:1.1rem; font-weight:bold; border:none; border-radius:50px; cursor:pointer; width:100%; margin-top:15px; }
-        .success { display:none; text-align:center; padding:40px; background:#1a1a1a; border-radius:12px; color:#ffd700; }
+        body { font-family: Arial; background:#1a1a1a; color:#eee; padding:40px; text-align:center; }
+        button { background:#ffd700; color:#111; padding:15px 30px; font-size:1.2rem; border:none; border-radius:50px; }
+        #result { margin-top:20px; padding:20px; border-radius:10px; }
     </style>
 </head>
 <body>
-    <header>
-        <h1>StyleCut Salon</h1>
-        <p>Book Your Appointment</p>
-    </header>
-
-    <nav>
-        <a href="index.html">← Back to Home</a>
-    </nav>
-
-    <div class="booking-container">
-        <h2>Make an Appointment</h2>
-
-        <div id="step1">
-            <label>Select Service</label>
-            <select id="service">
-                <option value="">-- Choose a service --</option>
-                <option value="Haircut + Style" data-price="35" data-duration="45">Haircut + Style - $35 (45 min)</option>
-                <option value="Beard Trim" data-price="20" data-duration="30">Beard Trim - $20 (30 min)</option>
-                <option value="Hair Color" data-price="65" data-duration="90">Hair Color - $65 (90 min)</option>
-                <option value="Kids Haircut" data-price="25" data-duration="30">Kids Haircut - $25 (30 min)</option>
-            </select>
-
-            <label>Full Name</label>
-            <input type="text" id="name" placeholder="John Doe">
-
-            <label>Email Address</label>
-            <input type="email" id="email" placeholder="your@email.com" required>
-
-            <label>Phone Number</label>
-            <input type="tel" id="phone" placeholder="(555) 123-4567">
-
-            <button onclick="nextStep(2)">Continue →</button>
-        </div>
-
-        <div id="step2" style="display:none;">
-            <label>Select Date</label>
-            <input type="date" id="date">
-
-            <label>Available Times</label>
-            <div class="time-slots" id="timeSlots"></div>
-
-            <button onclick="nextStep(3)">Continue →</button>
-        </div>
-
-        <div id="step3" style="display:none;">
-            <h3>Confirm Booking</h3>
-            <div id="summary" style="background:#1a1a1a; padding:20px; border-radius:8px; margin:20px 0;"></div>
-            <button onclick="confirmBooking()">Confirm & Send Confirmation Email</button>
-        </div>
-
-        <div id="success" class="success">
-            <h2>✅ Appointment Booked Successfully!</h2>
-            <p>A confirmation email has been sent to your inbox.</p>
-            <p style="color:#fff;">We can’t wait to see you at StyleCut Salon 💈</p>
-        </div>
-    </div>
+    <h1>EmailJS Test</h1>
+    <button onclick="sendTest()">Send Test Email</button>
+    <div id="result"></div>
 
     <script>
         emailjs.init("I5TSWQG0NMQGy0UdU");
 
-        let selectedTime = "";
+        function sendTest() {
+            const result = document.getElementById('result');
+            result.innerHTML = "Sending...";
 
-        function nextStep(step) {
-            document.getElementById('step1').style.display = step === 1 ? 'block' : 'none';
-            document.getElementById('step2').style.display = step === 2 ? 'block' : 'none';
-            document.getElementById('step3').style.display = step === 3 ? 'block' : 'none';
-        }
-
-        function confirmBooking() {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const serviceSelect = document.getElementById('service').selectedOptions[0];
-            const date = document.getElementById('date').value;
-
-            if (!name || !email || !serviceSelect.value || !date || !selectedTime) {
-                alert("Please fill all fields and select a time slot");
-                return;
-            }
-
-            const templateParams = {
-                name: name,
-                service: serviceSelect.value,
-                date: date,
-                time: selectedTime,
-                price: serviceSelect.dataset.price
-            };
-
-            emailjs.send("service_0o9dce2", "template_jm8o97r", templateParams)
-                .then(() => {
-                    document.getElementById('step3').style.display = 'none';
-                    document.getElementById('success').style.display = 'block';
-                })
-                .catch((error) => {
-                    console.error(error);
-                    alert("Booking saved! We will contact you soon.");
-                });
-        }
-
-        window.onload = () => {
-            const slots = document.getElementById('timeSlots');
-            const times = ["09:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00"];
-            times.forEach(time => {
-                let div = document.createElement('div');
-                div.className = 'time-slot';
-                div.textContent = time;
-                div.onclick = () => {
-                    document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
-                    div.classList.add('selected');
-                    selectedTime = time;
-                };
-                slots.appendChild(div);
+            emailjs.send("service_0o9dce2", "template_jm8o97r", {
+                name: "Test Customer",
+                email: "your_own_email@gmail.com",   // ← Change this to your real email first
+                service: "Haircut + Style",
+                date: "2026-05-20",
+                time: "14:00",
+                price: "35"
+            })
+            .then(() => {
+                result.style.background = "#006600";
+                result.innerHTML = "✅ Status: Sent Successfully<br>Check your inbox + Spam";
+            })
+            .catch(err => {
+                result.style.background = "#660000";
+                result.innerHTML = "❌ Error: " + (err.text || err);
             });
-        };
+        }
     </script>
 </body>
 </html>
